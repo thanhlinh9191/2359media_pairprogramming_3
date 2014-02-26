@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ImageCollectionViewController : UICollectionViewController
+@interface ImageCollectionViewController : UICollectionViewController<NSURLConnectionDataDelegate>
 @property (strong, atomic) NSMutableArray *imagesArray;
 @end

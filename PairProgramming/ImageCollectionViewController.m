@@ -33,34 +33,45 @@
     NSString *consumerSecret=@"lu1ekhlzWQf8PBwHBmRHitnQrWUSfDbGq94t5pgp";
     
     [PXRequest setConsumerKey:consumerKey consumerSecret:consumerSecret];
-    [PXRequest requestForPhotoFeature:PXAPIHelperPhotoFeaturePopular completion:^(NSDictionary *results, NSError *error) {
-        if (error)
-        {
-            [[[UIAlertView alloc] initWithTitle:@"Couldn't fetch from 500px." message:error.localizedDescription delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
-            return;
-        }
         
-        NSArray *photosArray = [results valueForKey:@"photos"];
-        for (NSDictionary *photoDict in photosArray)
-        {
-            NSString *urlString = [[[photoDict valueForKey:@"images"] objectAtIndex:0] valueForKey:@"url"];
-            NSLog(@"url la %@", urlString);
-            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-            UIImage *image = [UIImage imageWithData:imageData];
-            [ self.imagesArray addObject:image];
-            
-            //lay 30 cai demo cho no nhanh
-            
-            if(self.imagesArray.count==30){
-                break;
-            }
-        }
-        NSLog(@"da lay xong roi");
-        [self.collectionView reloadData];
+    //CACH LAM SO 2, SU DUNG NSURLCONNECTION
     
-    }];
+    NSURLRequest *request= [[PXRequest apiHelper] urlRequestForPhotoFeature:PXAPIHelperPhotoFeaturePopular];
+    
+    NSURLConnection *connection =[[NSURLConnection alloc] initWithRequest:request delegate:self ];
+    [connection start];
     
 
+}
+//hien thuc cac phuong thuc cua delegate
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    NSError* error;
+    NSDictionary* jsonObject = [NSJSONSerialization
+                          JSONObjectWithData:data
+                          
+                          options:kNilOptions
+                          error:&error];
+    
+    NSLog(@"chuoi json la %@", jsonObject);
+    
+    //lap lai doan code nay thoi , chi xu li json
+    NSArray *photosArray = [jsonObject valueForKey:@"photos"];
+    for (NSDictionary *photoDict in photosArray)
+    {
+        NSString *urlString = [[[photoDict valueForKey:@"images"] objectAtIndex:0] valueForKey:@"url"];
+        NSLog(@"url la %@", urlString);
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+        UIImage *image = [UIImage imageWithData:imageData];
+        [ self.imagesArray addObject:image];
+        
+        //lay 30 cai demo cho no nhanh
+        
+        if(self.imagesArray.count==30){
+            break;
+        }
+    }
+    NSLog(@"da lay xong roi");
+    [self.collectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
