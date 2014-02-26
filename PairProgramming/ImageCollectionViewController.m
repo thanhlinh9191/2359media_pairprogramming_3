@@ -34,7 +34,7 @@
     
     [PXRequest setConsumerKey:consumerKey consumerSecret:consumerSecret];
     
-    //CACH LAM SO 2, SU DUNG NSURLCONNECTION
+    //CACH LAM SO 3, SU DUNG NSURLSESSION
     
     NSURLRequest *request= [[PXRequest apiHelper] urlRequestForPhotoFeature:PXAPIHelperPhotoFeaturePopular];
     
