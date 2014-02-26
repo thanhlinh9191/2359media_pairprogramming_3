@@ -1,0 +1,10 @@
+PODS:
+  - 500px-iOS-api (1.0.5)
+
+DEPENDENCIES:
+  - 500px-iOS-api (~> 1.0.5)
+
+SPEC CHECKSUMS:
+  500px-iOS-api: b67f7b641d79737eb26478d4e07cc1610314521c
+
+COCOAPODS: 0.29.0
